@@ -1,9 +1,145 @@
-<html>
+<!DOCTYPE html><html lang="en">
 <head>
-<title> WELCOME TO M WORLD </title>
+  <meta charset="UTF-8">
+  <title>Shreekriya - Billing & Maintenance</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header img {
+      width: 100px;
+      display: block;
+      margin: auto;
+    }
+    header h1 {
+      color: #2c3e50;
+      margin-top: 10px;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 20px;
+      background: #2980b9;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .status {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .status label {
+      flex: 1;
+      margin-right: 10px;
+    }
+    .status input {
+      margin-right: 10px;
+    }
+  </style>
 </head>
 <body>
-<h1>hi everyone ! </h1>
-<p> as this is my first time trying to creare a website after my 9th std </p>
-</body>
+  <header>
+    <img src="A_digital_vector_graphic_features_a_logo_for_the_b.png" alt="Shreekriya Logo">
+    <h1>Shreekriya - Billing & Maintenance</h1>
+  </header>  <form id="jobForm">
+    <label>Customer Name</label>
+    <input type="text" id="customer" required><label>Device Type</label>
+<input type="text" id="device" required>
+
+<label>Technician Name</label>
+<input type="text" id="technician">
+
+<label>What Work Done</label>
+<textarea id="workDone"></textarea>
+
+<label>Remarks</label>
+<textarea id="remarks"></textarea>
+
+<label>Spares Replaced</label>
+<textarea id="sparesReplaced"></textarea>
+
+<label>Spares Required</label>
+<textarea id="sparesRequired"></textarea>
+
+<label>Spares Replaced But No Response</label>
+<textarea id="noResponse"></textarea>
+
+<label>Need Attention From Senior</label>
+<textarea id="seniorAttention"></textarea>
+
+<label>Total Amount (₹)</label>
+<input type="number" id="total">
+
+<label>Date</label>
+<input type="date" id="date">
+
+<label>Status</label>
+<select id="status">
+  <option value="Pending">Pending</option>
+  <option value="Delivered">Delivered</option>
+  <option value="Not Repairable">Not Repairable</option>
+</select>
+
+<button type="submit">Save Job</button>
+
+  </form>  <script>
+    let db;
+    const request = indexedDB.open("TVServiceDB", 1);
+    request.onupgradeneeded = e => {
+      db = e.target.result;
+      const store = db.createObjectStore("jobs", { keyPath: "id", autoIncrement: true });
+    };
+    request.onsuccess = e => { db = e.target.result; };
+
+    document.getElementById("jobForm").onsubmit = function(e) {
+      e.preventDefault();
+      const job = {
+        customer: customer.value,
+        device: device.value,
+        technician: technician.value,
+        workDone: workDone.value,
+        remarks: remarks.value,
+        sparesReplaced: sparesReplaced.value,
+        sparesRequired: sparesRequired.value,
+        noResponse: noResponse.value,
+        seniorAttention: seniorAttention.value,
+        total: total.value,
+        date: date.value,
+        status: status.value
+      };
+      const tx = db.transaction("jobs", "readwrite");
+      tx.objectStore("jobs").add(job);
+      tx.oncomplete = () => {
+        alert("Job saved locally!");
+        document.getElementById("jobForm").reset();
+      };
+    };
+  </script></body>
 </html>
